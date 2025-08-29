@@ -4,12 +4,11 @@ const Borrowing = require("./borrowing.model");
 
 function applyAssociations() {
   // Borrower ↔ Borrowing
-  User.hasMany(Borrowing, { foreignKey: "borrower_id", as: "borrows" });
-  Borrowing.belongsTo(User, { foreignKey: "borrower_id", as: "borrower" });
+  User.hasMany(Borrowing, { foreignKey: "borrower_public_id", sourceKey: "public_id", as: "borrows" });
+  Borrowing.belongsTo(User, { foreignKey: "borrower_public_id", targetKey: "public_id", as: "borrower" });
 
-  // Book ↔ Borrowing
-  Book.hasMany(Borrowing, { foreignKey: "book_id", as: "borrows" });
-  Borrowing.belongsTo(Book, { foreignKey: "book_id", as: "book" });
+  Book.hasMany(Borrowing, { foreignKey: "book_public_id", sourceKey: "public_id", as: "borrows" });
+  Borrowing.belongsTo(Book, { foreignKey: "book_public_id", targetKey: "public_id", as: "book" });
 }
 
 module.exports = applyAssociations;

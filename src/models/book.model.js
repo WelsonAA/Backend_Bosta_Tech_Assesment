@@ -3,8 +3,9 @@ const { getDB } = require("../config/db");
 
 const sequelize = getDB();
 
-const Book = sequelize.define("Book", {
+const Book = sequelize.define("books", {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+  public_id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, unique: true },
   title: { type: DataTypes.STRING, allowNull: false },
   author: { type: DataTypes.STRING, allowNull: false },
   isbn: { type: DataTypes.STRING, unique: true, allowNull: false },

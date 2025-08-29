@@ -1,47 +1,14 @@
 const express = require("express");
-const User = require("../models/user.model");
+const basicAuth = require("../middlewares/basicAuth");
+const userController = require("../controllers/user.controller");
 
 const router = express.Router();
 
-// Create
-router.post("/", async (req, res) => {
-  try {
-    const user = await User.create(req.body);
-    res.status(201).json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
-// Read all
-router.get("/", async (req, res) => {
-  const users = await User.findAll();
-  res.json(users);
-});
-
-// Read one
-router.get("/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id);
-  if (!user) return res.status(404).json({ error: "User not found" });
-  res.json(user);
-});
-
-// Update
-router.put("/:id", async (req, res) => {
-  try {
-    const [updated] = await User.update(req.body, { where: { id: req.params.id } });
-    if (!updated) return res.status(404).json({ error: "User not found" });
-    res.json(await User.findByPk(req.params.id));
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
-// Delete
-router.delete("/:id", async (req, res) => {
-  const deleted = await User.destroy({ where: { id: req.params.id } });
-  if (!deleted) return res.status(404).json({ error: "User not found" });
-  res.status(204).send();
-});
+router.post("/register", userController.register.bind(userController));
+router.get("/", basicAuth(["admin"]), userController.getAll.bind(userController));
+router.get("/:public_id", userController.getOne.bind(userController));
+router.put("/:public_id", userController.update.bind(userController));
+router.put("/:public_id/promote", basicAuth(["admin"]), userController.promote.bind(userController));
+router.delete("/:public_id", basicAuth(["admin"]), userController.delete.bind(userController));
 
 module.exports = router;

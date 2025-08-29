@@ -73,6 +73,8 @@ async function initDB({ force = false, alter = false } = {}) {
 
     await sequelize.sync({ force, alter });
     console.log("✅ DB synced successfully");
+
+    
   } catch (err) {
     console.error("❌ DB init error:", err);
     throw err;

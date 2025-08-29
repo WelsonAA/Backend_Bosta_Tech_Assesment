@@ -1,10 +1,13 @@
 const { DataTypes } = require("sequelize");
 const { getDB } = require("../config/db");
-
+const dates = require("../utils/dates");
 const sequelize = getDB();
 const BORROW_ALLOWANCE = 14;
-const Borrowing = sequelize.define("Borrowing", {
+const Borrowing = sequelize.define("borrowings", {
   id: {type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true},
+  public_id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, unique: true },
+  book_public_id: {   type: DataTypes.UUID,   allowNull: false, references: { model: "books", key: "public_id" } },
+  borrower_public_id: { type: DataTypes.UUID, allowNull: false, references: { model: "users", key: "public_id" } },
   borrow_date: {type: DataTypes.DATEONLY, allowNull: false, defaultValue: DataTypes.NOW }, // defaults to today if not given
   due_date: { type: DataTypes.DATEONLY, allowNull: false },
   return_date: {type: DataTypes.DATEONLY,
@@ -24,8 +27,8 @@ const Borrowing = sequelize.define("Borrowing", {
   hooks: {
     beforeValidate(borrowing) {
       if (!borrowing.due_date && borrowing.borrow_date) {
-        const dueDate = addDays(borrowing.borrow_date, BORROW_ALLOWANCE);
-        borrowing.due_date = formatDate(dueDate);
+        const dueDate = dates.addDays(borrowing.borrow_date, BORROW_ALLOWANCE);
+        borrowing.due_date = dates.formatDate(dueDate);
       }
     }
   }
