@@ -4,6 +4,7 @@ services:
   app:
     build: .
     container_name: bosta_app
+    command: sh -c "npx wait-on tcp:db:5432 && npm start"
     ports:
       - "3000:3000"
     environment:
@@ -12,7 +13,7 @@ services:
       - ADMIN_PASS=secret
       - DB_HOST=db
       - DB_USER=postgres
-      - DB_PASS=postgres
+      - DB_PASS=root
       - DB_NAME=bosta
     depends_on:
       - db
