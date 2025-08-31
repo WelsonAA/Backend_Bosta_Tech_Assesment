@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   app:
@@ -9,12 +9,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - ADMIN_USER=admin
-      - ADMIN_PASS=secret
-      - DB_HOST=db
-      - DB_USER=postgres
-      - DB_PASS=root
-      - DB_NAME=bosta
+    env_file:
+      - .env.docker   # 👈 use docker-specific env
     depends_on:
       - db
 
@@ -28,7 +24,9 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5434:5432"  # host:container
+    env_file:
+      - .env.docker   # optional (just keeps consistency)
 
 volumes:
   db_data:
