@@ -57,7 +57,7 @@ his ensures consistent responses for API consumers.
 - [Sequence Diagram](./assets/sequence_diagram.md)  
   Step-by-step flow of interactions between users, controllers, services, and repositories.
 🚀 Running the Project
-Option 1: Using Docker
+### Option 1: Using Docker
 Make sure you have Docker and Docker Compose installed.
 
 1. Build and start the containers:
