@@ -11,8 +11,8 @@ class BookService {
     return await bookRepo.findAndCountAll(limit, offset);
   }
 
-  async searchBooks(query) {
-    return await bookRepo.search(query, Op);
+  async searchBooks(query, limit, offset) {
+    return await bookRepo.search(query, Op, limit, offset);
   }
 
   async getBook(public_id) {

@@ -32,17 +32,33 @@ class BookController {
     }
   }
 
-  async search(req, res, next) {
-    try {
-      const { q } = req.query;
-      if (!q) return res.status(400).json({ error: "Missing search query" });
-
-      const books = await bookService.searchBooks(q);
-      res.json(books);
-    } catch (err) {
-      next(err);
+async search(req, res, next) {
+  try {
+    const { q } = req.query;
+    if (!q) {
+      return res.status(400).json({ error: "Missing search query" });
     }
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await bookService.searchBooks(q, limit, offset);
+
+    res.json({
+      pagination: {
+        total: count,
+        page,
+        perPage: limit,
+        totalPages: Math.ceil(count / limit),
+      },
+      books: rows,
+    });
+  } catch (err) {
+    next(err);
   }
+}
+
 
   async getOne(req, res, next) {
     const book = await bookService.getBook(req.params.public_id);

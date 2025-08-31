@@ -13,8 +13,8 @@ class BookRepository {
     });
   }
 
-  async search(query, Op) {
-    return await Book.findAll({
+  async search(query, Op, limit, offset) {
+    return await Book.findAndCountAll({
       where: {
         [Op.or]: [
           { title: { [Op.like]: `%${query}%` } },
@@ -22,6 +22,9 @@ class BookRepository {
           { isbn: { [Op.like]: `%${query}%` } },
         ],
       },
+      limit,
+      offset,
+      order: [["createdAt", "DESC"]],
     });
   }
 
